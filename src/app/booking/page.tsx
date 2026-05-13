@@ -11,6 +11,7 @@ type Service = {
   code: string;
   name_ar: string;
   name_en: string;
+  price_jod: string;
   price_label_ar: string;
   price_label_en: string;
   duration_minutes: number;
@@ -69,6 +70,13 @@ const copy = {
     summary: "ملخص الحجز",
     chosen: "اختيارك",
     selectService: "اختار الخدمة المناسبة",
+    addOns: "إضافات الموعد",
+    disposableTowel: "منشفة استخدام مرة واحدة",
+    disposableTowelText: "أضف منشفة جديدة للموعد مقابل 1 د.أ.",
+    towelSummary: "المنشفة",
+    total: "المبلغ",
+    yes: "نعم",
+    no: "لا",
     selectBarber: "اختار الحلاق",
     selectDay: "اختار اليوم",
     selectTime: "اختار الوقت",
@@ -111,6 +119,13 @@ const copy = {
     summary: "Booking summary",
     chosen: "Your choice",
     selectService: "Choose a service",
+    addOns: "Appointment add-ons",
+    disposableTowel: "Single-use towel",
+    disposableTowelText: "Add a fresh single-use towel for 1 JOD.",
+    towelSummary: "Towel",
+    total: "Amount",
+    yes: "Yes",
+    no: "No",
     selectBarber: "Choose a barber",
     selectDay: "Choose a day",
     selectTime: "Choose a time",
@@ -188,6 +203,34 @@ function displayTime(value: string, lang: Language) {
   }).format(date);
 }
 
+function formatJodAmount(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+  }).format(value);
+}
+
+function formatBookingAmount(service: Service | null, wantsDisposableTowel: boolean, lang: Language) {
+  if (!service) {
+    return "";
+  }
+
+  if (!wantsDisposableTowel) {
+    return lang === "ar" ? service.price_label_ar : service.price_label_en;
+  }
+
+  const total = Number.parseFloat(service.price_jod) + 1;
+  const amount = formatJodAmount(Number.isFinite(total) ? total : 1);
+
+  if (lang === "ar") {
+    const prefix = service.price_label_ar.includes("ابتداء") ? "ابتداءً من " : "";
+    return `${prefix}${amount} د.أ`;
+  }
+
+  const prefix = service.price_label_en.toLowerCase().startsWith("from") ? "from " : "";
+  return `${prefix}${amount} JOD`;
+}
+
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
   if (init?.body && !headers.has("Content-Type")) {
@@ -231,6 +274,7 @@ export default function BookingPage() {
   const [selectedDate, setSelectedDate] = useState(todayDateString(0));
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+  const [wantsDisposableTowel, setWantsDisposableTowel] = useState(false);
   const [form, setForm] = useState<FormState>({
     customer_name: "",
     customer_email: "",
@@ -247,6 +291,7 @@ export default function BookingPage() {
   const dates = useMemo(() => Array.from({ length: 15 }, (_, index) => todayDateString(index)), []);
   const selectedService = services.find((service) => service.id === selectedServiceId) ?? null;
   const selectedBarber = barbers.find((barber) => barber.id === selectedBarberId) ?? null;
+  const bookingAmount = formatBookingAmount(selectedService, wantsDisposableTowel, lang);
   const steps = [t.service, t.barber, t.day, t.time, t.details];
 
   useEffect(() => {
@@ -380,6 +425,7 @@ export default function BookingPage() {
           customer_email: form.customer_email,
           customer_phone: form.customer_phone,
           customer_language: lang,
+          wants_disposable_towel: wantsDisposableTowel,
           start_at: selectedSlot.start_at,
         }),
       });
@@ -441,6 +487,8 @@ export default function BookingPage() {
                     <SummaryRow label={t.barber} value={selectedBarber ? (isArabic ? selectedBarber.name_ar : selectedBarber.name_en) : t.notSelected} />
                     <SummaryRow label={t.day} value={selectedDate ? formatFullDate(selectedDate, lang) : t.notSelected} />
                     <SummaryRow label={t.time} value={selectedSlot ? displayTime(selectedSlot.time, lang) : t.notSelected} />
+                    <SummaryRow label={t.towelSummary} value={wantsDisposableTowel ? t.yes : t.no} />
+                    <SummaryRow label={t.total} value={bookingAmount || t.notSelected} />
                   </div>
                 </div>
               </div>
@@ -509,6 +557,30 @@ export default function BookingPage() {
                       );
                     })}
                   </div>
+                  {selectedService ? (
+                    <div className="mt-4 rounded-lg border border-white/[0.14] bg-[#081426] p-4">
+                      <p className="text-sm font-black text-[#d6bf86]">{t.addOns}</p>
+                      <button
+                        type="button"
+                        className={`mt-3 flex w-full items-center justify-between gap-4 rounded-lg border p-4 text-start transition ${
+                          wantsDisposableTowel
+                            ? "border-[#d6bf86] bg-[#d6bf86] text-[#071426]"
+                            : "border-white/[0.14] bg-[#0b1628]/80 text-white hover:border-[#d6bf86]/60"
+                        }`}
+                        onClick={() => setWantsDisposableTowel((current) => !current)}
+                      >
+                        <span>
+                          <strong className="block text-base font-black">{t.disposableTowel}</strong>
+                          <small className={`mt-1 block text-sm font-bold ${wantsDisposableTowel ? "text-[#071426]/70" : "text-slate-400"}`}>
+                            {t.disposableTowelText}
+                          </small>
+                        </span>
+                        <span className={`grid size-9 shrink-0 place-items-center rounded-full border text-sm font-black ${wantsDisposableTowel ? "border-[#071426]/25 bg-[#071426] text-white" : "border-white/[0.18] bg-white/[0.06] text-[#d6bf86]"}`}>
+                          +1
+                        </span>
+                      </button>
+                    </div>
+                  ) : null}
                 </section>
               ) : null}
 
@@ -718,6 +790,7 @@ export default function BookingPage() {
               onClick={() => {
                 setConfirmation(null);
                 setSelectedSlot(null);
+                setWantsDisposableTowel(false);
                 setStepIndex(0);
               }}
             >
