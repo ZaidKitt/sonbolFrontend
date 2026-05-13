@@ -30,7 +30,6 @@ type ServiceGroup = {
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
 const LOCATION_URL = "https://maps.app.goo.gl/pqGYKWD1NurxMs1W7?g_st=ic";
-const MAP_EMBED_URL = "https://maps.google.com/maps?cid=11490454602156177200&output=embed";
 
 const copy = {
   ar: {
@@ -43,11 +42,10 @@ const copy = {
     navLocation: "الموقع",
     book: "احجز الآن",
     heroEyebrow: "صالون رجالي في عمّان",
-    heroTitle: "حلاقة رايقة بطابع دقيق",
-    heroLine: "موعد واضح، كرسي جاهز، وخدمة مرتبة من أول دقيقة.",
-    heroNote: "مواعيد من 12 الظهر إلى 10 بالليل",
-    location: "افتح الموقع",
-    mapTitle: "موقع صالون سنبل على الخريطة",
+    heroTitle: "خبرة، مهارة، دقة واحترافية",
+    heroLine: "خدمات متميزة",
+    heroNote: "تبدأ المواعيد من الساعة 12 ظهراً وحتى الساعة 10 مساءً",
+    location: "الوصول للموقع الجغرافي",
     imageAlt: "داخل صالون سنبل",
     facts: [
       { label: "الحجز", value: "خطوات قصيرة" },
@@ -65,17 +63,17 @@ const copy = {
     visitNoteTitle: "تغيير أو إلغاء؟",
     visitNoteText: "اتصل بسنبل على 0789299699. الإلغاء من الموقع غير متاح.",
     servicesEyebrow: "القائمة",
-    servicesTitle: "الخدمات مرتبة حسب اللي تحتاجه.",
+    servicesTitle: "دقة بالمواعيد واهتمام بالتفاصيل.",
     servicesSubtitle: "السعر والوقت واضحين قبل ما تحجز، والنظام يحسب توفر الحلاق بدقة.",
     productsEyebrow: "المنتجات",
     productsTitle: "منتجات موجودة في الصالون.",
     productsSubtitle: "الشراء من المحل فقط. اضغط على المنتج وشوف حالته وطريقة التواصل.",
     productsLoading: "جاري تحميل المنتجات...",
     productsEmpty: "لا توجد منتجات ظاهرة حالياً.",
-    locationEyebrow: "الموقع",
-    locationTitle: "تعال على سنبل مباشرة.",
-    locationText: "الخريطة مدمجة هنا عشان تشوف المكان قبل ما تطلع. إذا بدك الاتجاهات افتحها على Google Maps.",
-    locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
+    locationEyebrow: "موقعنا 📍",
+    locationTitle: "الأردن - البلقاء - عين الباشا",
+    locationText: "بإمكانك الضغط على الرابط أدناه للوصول إلى الموقع الجغرافي.",
+    locationAddress: "الأردن - البلقاء - عين الباشا",
     phoneLabel: "الهاتف",
     hoursLabel: "الدوام",
     inStock: "متوفر",
@@ -87,7 +85,7 @@ const copy = {
     close: "إغلاق",
     finalTitle: "جاهز ترتب موعدك؟",
     finalText: "اختار الخدمة والوقت المناسب، وبعد الدفع على كليك سنبل يثبت الحجز.",
-    footerTagline: "حلاقة مرتبة، موعد واضح، وتجربة هادئة.",
+    footerTagline: "خبرة، مهارة، ودقة في كل زيارة.",
     footerQuick: "روابط سريعة",
     footerContact: "تواصل",
     footerRights: "سنبل. كل الحقوق محفوظة.",
@@ -129,11 +127,10 @@ const copy = {
     navLocation: "Location",
     book: "Book now",
     heroEyebrow: "Men's salon in Amman",
-    heroTitle: "Sharp grooming, booked cleanly",
-    heroLine: "A clear appointment, a ready chair, and careful service from the first minute.",
-    heroNote: "Appointments from 12 PM to 10 PM",
-    location: "Open location",
-    mapTitle: "Sonbol Salon location map",
+    heroTitle: "Experience, skill, precision, and professionalism",
+    heroLine: "Premium services",
+    heroNote: "Appointments start at 12 PM and run until 10 PM",
+    location: "Get directions",
     imageAlt: "Inside Sonbol Salon",
     facts: [
       { label: "Booking", value: "Short steps" },
@@ -151,17 +148,17 @@ const copy = {
     visitNoteTitle: "Need to change or cancel?",
     visitNoteText: "Call Sonbol at 0789299699. Website cancellation is not available.",
     servicesEyebrow: "Menu",
-    servicesTitle: "Services arranged around what you need.",
+    servicesTitle: "Precise appointments and attention to detail.",
     servicesSubtitle: "Price and time are clear before booking, and barber availability is checked precisely.",
     productsEyebrow: "Products",
     productsTitle: "Products available at the salon.",
     productsSubtitle: "Products are bought in-store only. Tap a card to check availability and contact details.",
     productsLoading: "Loading products...",
     productsEmpty: "No products are visible right now.",
-    locationEyebrow: "Location",
-    locationTitle: "Come straight to Sonbol.",
-    locationText: "The map is embedded here so you can check the place before heading out. Open Google Maps for directions.",
-    locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
+    locationEyebrow: "Our location 📍",
+    locationTitle: "Jordan - Balqa - Ein Al-Basha",
+    locationText: "Use the link below to reach the location on Google Maps.",
+    locationAddress: "Jordan - Balqa - Ein Al-Basha",
     phoneLabel: "Phone",
     hoursLabel: "Hours",
     inStock: "In stock",
@@ -173,7 +170,7 @@ const copy = {
     close: "Close",
     finalTitle: "Ready to set your time?",
     finalText: "Choose your service and time. After CLIQ payment, Sonbol confirms the appointment.",
-    footerTagline: "Clean grooming, clear appointments, and a calm visit.",
+    footerTagline: "Experience, skill, and precision on every visit.",
     footerQuick: "Quick links",
     footerContact: "Contact",
     footerRights: "Sonbol. All rights reserved.",
@@ -364,7 +361,7 @@ export default function Home() {
                 <div className="absolute inset-x-3 bottom-3 overflow-hidden rounded-lg border border-white/[0.16] bg-[#071426]/80 p-3 backdrop-blur-xl">
                   <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[line-scan_4s_linear_infinite]" />
                   <span className="relative block font-serif text-2xl font-black italic tracking-widest text-white">{t.brand}</span>
-                  <span className="relative mt-1 block text-xs font-bold text-slate-300">{t.heroNote}</span>
+                  <span className="relative mt-1 block text-xs font-bold leading-5 text-slate-300">{t.heroNote}</span>
                 </div>
               </div>
             </div>
@@ -514,17 +511,22 @@ export default function Home() {
       </section>
 
       <section id="location" className="relative z-10 px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.88fr_1.12fr] lg:items-stretch">
+        <div className="mx-auto max-w-5xl">
           <div className="rounded-lg border border-white/[0.18] bg-white/[0.045] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.24)] sm:p-8">
             <p className="text-sm font-black text-[#c8ad72]">{t.locationEyebrow}</p>
             <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">{t.locationTitle}</h2>
             <p className="mt-4 text-base font-bold leading-8 text-slate-400">{t.locationText}</p>
 
             <div className="mt-6 grid gap-3">
-              <div className="rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
+              <a
+                className="block rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
+                href={LOCATION_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <span className="block text-xs font-black text-slate-500">{t.navLocation}</span>
                 <strong className="mt-2 block text-base font-black leading-7 text-white">{t.locationAddress}</strong>
-              </div>
+              </a>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
                   <span className="block text-xs font-black text-slate-500">{t.hoursLabel}</span>
@@ -547,17 +549,6 @@ export default function Home() {
             >
               {t.location}
             </a>
-          </div>
-
-          <div className="overflow-hidden rounded-lg border border-white/[0.18] bg-[#0b1628] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.34)]">
-            <iframe
-              title={t.mapTitle}
-              src={MAP_EMBED_URL}
-              className="h-[360px] w-full rounded-lg border-0 sm:h-[460px] lg:h-full"
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-            />
           </div>
         </div>
       </section>
