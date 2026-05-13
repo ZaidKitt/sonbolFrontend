@@ -57,7 +57,7 @@ const copy = {
     switch: "EN",
     eyebrow: "حجز موعد",
     title: "اختار موعدك عند سنبل",
-    subtitle: "خمس خطوات قصيرة. بعدها ادفع على كليك، وسنبل يثبت الموعد بعد وصول الدفع.",
+    subtitle: "خمس خطوات قصيرة. بعدها ادفع على كليك، وبعد وصول الدفع يتم تثبيت الموعد.",
     service: "الخدمة",
     barber: "الحلاق",
     day: "اليوم",
@@ -97,7 +97,7 @@ const copy = {
     cliq: "CLIQ",
     refund: "المبلغ قابل للاسترداد بالكامل فقط عند الإلغاء قبل الموعد بـ 3 ساعات أو أكثر. إذا كان الإلغاء خلال أقل من 3 ساعات، يتم استرداد نصف المبلغ فقط.",
     cancel: "لا يمكن إلغاء الموعد من الموقع. للإلغاء اتصل بسنبل على:",
-    approval: "بعد استلام الدفع، سيوافق سنبل على الموعد وسيصلك بريد التأكيد.",
+    approval: "بعد تحويل الدفعة ووصولها، سيتم تثبيت الموعد وإرسال بريد التأكيد.",
     close: "إغلاق",
     errorGeneric: "حدث خطأ. حاول مرة أخرى.",
   },
@@ -106,7 +106,7 @@ const copy = {
     switch: "عربي",
     eyebrow: "Book an appointment",
     title: "Choose your time at Sonbol",
-    subtitle: "Five short steps. Pay through CLIQ, then Sonbol confirms once payment arrives.",
+    subtitle: "Five short steps. Pay through CLIQ. Once payment arrives, the appointment is confirmed.",
     service: "Service",
     barber: "Barber",
     day: "Day",
@@ -146,7 +146,7 @@ const copy = {
     cliq: "CLIQ",
     refund: "The amount is fully refundable only if cancellation happens at least 3 hours before the appointment. Less than 3 hours before means only 50% is refundable.",
     cancel: "Appointments cannot be cancelled on the website. To cancel, call Sonbol at:",
-    approval: "After payment is received, Sonbol will approve the appointment and you will receive a confirmation email.",
+    approval: "Once the payment transfer arrives, the appointment is confirmed and a confirmation email is sent.",
     close: "Close",
     errorGeneric: "Something went wrong. Please try again.",
   },
@@ -310,8 +310,16 @@ export default function BookingPage() {
           return;
         }
 
+        const requestedService = new URLSearchParams(window.location.search).get("service");
+        const matchedService = requestedService
+          ? servicesData.find((service) => service.code === requestedService || String(service.id) === requestedService)
+          : null;
+
         setServices(servicesData);
         setBarbers(barbersData);
+        if (matchedService) {
+          setSelectedServiceId(matchedService.id);
+        }
       } catch (loadError) {
         if (active) {
           setError(loadError instanceof Error ? loadError.message : copy.ar.errorGeneric);
@@ -480,17 +488,6 @@ export default function BookingPage() {
               </div>
               <div className="p-4 sm:p-5">
                 <p className="break-words text-sm font-bold leading-7 text-slate-300">{t.subtitle}</p>
-                <div className="mt-5 rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
-                  <p className="text-xs font-black text-[#d6bf86]">{t.summary}</p>
-                  <div className="mt-3 grid gap-3 text-sm">
-                    <SummaryRow label={t.service} value={selectedService ? (isArabic ? selectedService.name_ar : selectedService.name_en) : t.notSelected} />
-                    <SummaryRow label={t.barber} value={selectedBarber ? (isArabic ? selectedBarber.name_ar : selectedBarber.name_en) : t.notSelected} />
-                    <SummaryRow label={t.day} value={selectedDate ? formatFullDate(selectedDate, lang) : t.notSelected} />
-                    <SummaryRow label={t.time} value={selectedSlot ? displayTime(selectedSlot.time, lang) : t.notSelected} />
-                    <SummaryRow label={t.towelSummary} value={wantsDisposableTowel ? t.yes : t.no} />
-                    <SummaryRow label={t.total} value={bookingAmount || t.notSelected} />
-                  </div>
-                </div>
               </div>
             </div>
           </aside>
@@ -733,6 +730,18 @@ export default function BookingPage() {
                   </div>
                 </section>
               ) : null}
+            </div>
+
+            <div className="mt-5 rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
+              <p className="text-xs font-black text-[#d6bf86]">{t.summary}</p>
+              <div className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+                <SummaryRow label={t.service} value={selectedService ? (isArabic ? selectedService.name_ar : selectedService.name_en) : t.notSelected} />
+                <SummaryRow label={t.barber} value={selectedBarber ? (isArabic ? selectedBarber.name_ar : selectedBarber.name_en) : t.notSelected} />
+                <SummaryRow label={t.day} value={selectedDate ? formatFullDate(selectedDate, lang) : t.notSelected} />
+                <SummaryRow label={t.time} value={selectedSlot ? displayTime(selectedSlot.time, lang) : t.notSelected} />
+                <SummaryRow label={t.towelSummary} value={wantsDisposableTowel ? t.yes : t.no} />
+                <SummaryRow label={t.total} value={bookingAmount || t.notSelected} />
+              </div>
             </div>
 
             <div className="mt-5 flex gap-3 border-t border-white/[0.10] pt-4">

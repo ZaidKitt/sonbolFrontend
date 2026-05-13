@@ -16,6 +16,7 @@ type Product = {
 };
 
 type ServiceItem = {
+  code: string;
   name: string;
   meta: string;
   price: string;
@@ -57,7 +58,7 @@ const copy = {
     visitText: "الحجز عند سنبل مش محتاج شرح طويل. اختار الخدمة والوقت، ادفع على كليك، وبعدها يصلك تأكيد الموعد.",
     visitCards: [
       { label: "01", title: "اختار وقتك", text: "الخدمات والأسعار واضحة قبل ما تثبت الحجز." },
-      { label: "02", title: "ادفع على كليك", text: "الدفع على alias: SKH46، وسنبل يراجع الطلب." },
+      { label: "02", title: "ادفع على كليك", text: "حوّل المبلغ على alias: SKH46، وبعد وصول الدفع يتم تثبيت الموعد." },
       { label: "03", title: "تعال قبل بربع ساعة", text: "بعد التأكيد، الوصول قبل الموعد يساعدنا نحافظ على الدور." },
     ],
     visitNoteTitle: "تغيير أو إلغاء؟",
@@ -84,7 +85,7 @@ const copy = {
     restockMessage: "المنتج غير متوفر حالياً. إذا تريده اتصل بسنبل، وغالباً يصل أقرب يوم خميس.",
     close: "إغلاق",
     finalTitle: "جاهز ترتب موعدك؟",
-    finalText: "اختار الخدمة والوقت المناسب، وبعد الدفع على كليك سنبل يثبت الحجز.",
+    finalText: "اختار الخدمة والوقت المناسب، وبعد تحويل المبلغ على كليك يتم تثبيت الحجز.",
     footerTagline: "خبرة، مهارة، ودقة في كل زيارة.",
     footerQuick: "روابط سريعة",
     footerContact: "تواصل",
@@ -94,26 +95,26 @@ const copy = {
         title: "الشعر واللحية",
         count: "4 خدمات",
         items: [
-          { name: "شعر + لحية + سشوار + سنفرة أو ماسك", meta: "40 دقيقة", price: "7 د.أ" },
-          { name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
-          { name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
-          { name: "قص أطفال", meta: "20 دقيقة", price: "3 د.أ" },
+          { code: "hair-beard-blowdry-scrub-mask", name: "شعر + لحية + سشوار + سنفرة أو ماسك", meta: "40 دقيقة", price: "7 د.أ" },
+          { code: "haircut", name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
+          { code: "beard", name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
+          { code: "kids", name: "قص أطفال", meta: "20 دقيقة", price: "3 د.أ" },
         ],
       },
       {
         title: "العناية والتجهيز",
         count: "4 خدمات",
         items: [
-          { name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
-          { name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
-          { name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
-          { name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
+          { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
+          { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
+          { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
+          { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
         ],
       },
       {
         title: "المناسبات",
         count: "خدمة واحدة",
-        items: [{ name: "بكج العريس", meta: "3 ساعات", price: "50 د.أ" }],
+        items: [{ code: "groom-package", name: "بكج العريس", meta: "3 ساعات", price: "50 د.أ" }],
       },
     ] satisfies ServiceGroup[],
   },
@@ -142,7 +143,7 @@ const copy = {
     visitText: "Booking with Sonbol stays simple. Choose the service and time, pay through CLIQ, then receive your appointment confirmation.",
     visitCards: [
       { label: "01", title: "Choose your time", text: "Services, prices, and duration are clear before booking." },
-      { label: "02", title: "Pay with CLIQ", text: "Send payment to alias: SKH46, then Sonbol reviews the request." },
+      { label: "02", title: "Pay with CLIQ", text: "Send payment to alias: SKH46. Once payment arrives, the appointment is confirmed." },
       { label: "03", title: "Arrive 15 minutes early", text: "After confirmation, arriving early keeps the schedule smooth." },
     ],
     visitNoteTitle: "Need to change or cancel?",
@@ -169,7 +170,7 @@ const copy = {
     restockMessage: "This product is currently out of stock. Call Sonbol if you want it. It usually arrives on the nearest Thursday.",
     close: "Close",
     finalTitle: "Ready to set your time?",
-    finalText: "Choose your service and time. After CLIQ payment, Sonbol confirms the appointment.",
+    finalText: "Choose your service and time. After the CLIQ transfer arrives, the appointment is confirmed.",
     footerTagline: "Experience, skill, and precision on every visit.",
     footerQuick: "Quick links",
     footerContact: "Contact",
@@ -179,26 +180,26 @@ const copy = {
         title: "Hair and Beard",
         count: "4 services",
         items: [
-          { name: "Hair + Beard + Blow Dry + Scrub or Mask", meta: "40 min", price: "7 JOD" },
-          { name: "Haircut", meta: "30 min", price: "4 JOD" },
-          { name: "Beard Trim", meta: "20 min", price: "3 JOD" },
-          { name: "Kids Haircut", meta: "20 min", price: "3 JOD" },
+          { code: "hair-beard-blowdry-scrub-mask", name: "Hair + Beard + Blow Dry + Scrub or Mask", meta: "40 min", price: "7 JOD" },
+          { code: "haircut", name: "Haircut", meta: "30 min", price: "4 JOD" },
+          { code: "beard", name: "Beard Trim", meta: "20 min", price: "3 JOD" },
+          { code: "kids", name: "Kids Haircut", meta: "20 min", price: "3 JOD" },
         ],
       },
       {
         title: "Care and Styling",
         count: "4 services",
         items: [
-          { name: "Blow Dry", meta: "10 min", price: "2 JOD" },
-          { name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
-          { name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
-          { name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
+          { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
+          { code: "protein", name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
+          { code: "skin-cleaning", name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
+          { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
         ],
       },
       {
         title: "Occasions",
         count: "1 service",
-        items: [{ name: "Groom Package", meta: "3h", price: "50 JOD" }],
+        items: [{ code: "groom-package", name: "Groom Package", meta: "3h", price: "50 JOD" }],
       },
     ] satisfies ServiceGroup[],
   },
@@ -390,13 +391,17 @@ export default function Home() {
                 </div>
                 <div className="grid gap-3">
                   {group.items.map((service) => (
-                    <div className="rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]" key={service.name}>
+                    <Link
+                      className="block rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
+                      href={`/booking?service=${encodeURIComponent(service.code)}`}
+                      key={service.name}
+                    >
                       <div className="flex items-start justify-between gap-3">
                         <h4 className="text-base font-black leading-7 text-white">{service.name}</h4>
                         <strong className="shrink-0 text-sm font-black text-[#d6bf86]">{service.price}</strong>
                       </div>
                       <p className="mt-3 text-sm font-bold text-slate-400">{service.meta}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </article>
