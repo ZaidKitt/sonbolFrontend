@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -285,6 +285,8 @@ export default function BookingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<AppointmentResponse | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const shouldScrollToStep = useRef(false);
 
   const t = copy[lang];
   const isArabic = lang === "ar";
@@ -293,6 +295,21 @@ export default function BookingPage() {
   const selectedBarber = barbers.find((barber) => barber.id === selectedBarberId) ?? null;
   const bookingAmount = formatBookingAmount(selectedService, wantsDisposableTowel, lang);
   const steps = [t.service, t.barber, t.day, t.time, t.details];
+
+  function scrollToBookingForm() {
+    window.requestAnimationFrame(() => {
+      const target = formRef.current;
+      if (!target) {
+        return;
+      }
+
+      const top = target.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({
+        top: Math.max(top, 0),
+        behavior: "smooth",
+      });
+    });
+  }
 
   useEffect(() => {
     let active = true;
@@ -378,6 +395,15 @@ export default function BookingPage() {
     };
   }, [selectedServiceId, selectedBarberId, selectedDate, t.errorGeneric]);
 
+  useEffect(() => {
+    if (!shouldScrollToStep.current) {
+      return;
+    }
+
+    shouldScrollToStep.current = false;
+    scrollToBookingForm();
+  }, [stepIndex]);
+
   function updateForm(field: keyof FormState, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
   }
@@ -402,14 +428,28 @@ export default function BookingPage() {
     setError("");
     if (!currentStepComplete()) {
       setError(stepIndex === 4 ? t.detailsRequired : t.required);
+      scrollToBookingForm();
       return;
     }
+    shouldScrollToStep.current = true;
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
 
   function goToPreviousStep() {
     setError("");
+    shouldScrollToStep.current = true;
     setStepIndex((current) => Math.max(current - 1, 0));
+  }
+
+  function goToStep(index: number) {
+    setError("");
+    if (index === stepIndex) {
+      scrollToBookingForm();
+      return;
+    }
+
+    shouldScrollToStep.current = true;
+    setStepIndex(index);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -492,7 +532,7 @@ export default function BookingPage() {
             </div>
           </aside>
 
-          <form className="min-w-0 rounded-lg border border-white/[0.16] bg-white/[0.045] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.26)] backdrop-blur sm:p-5" onSubmit={handleSubmit}>
+          <form ref={formRef} className="min-w-0 scroll-mt-24 rounded-lg border border-white/[0.16] bg-white/[0.045] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.26)] backdrop-blur sm:p-5" onSubmit={handleSubmit}>
             <div className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-5 sm:px-5">
               {steps.map((step, index) => (
                 <button
@@ -507,8 +547,7 @@ export default function BookingPage() {
                   }`}
                   onClick={() => {
                     if (index <= stepIndex) {
-                      setStepIndex(index);
-                      setError("");
+                      goToStep(index);
                     }
                   }}
                 >
