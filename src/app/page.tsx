@@ -265,8 +265,8 @@ export default function Home() {
       <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#050b17]/[0.82] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:h-[76px]">
           <a href="#top" className="flex min-w-0 items-center gap-3" aria-label={t.brandAr}>
-            <span className="relative flex size-12 items-center justify-center rounded-xl border border-white/20 bg-white/[0.07]">
-              <Image src="/assets/logo-transparent.png" alt="" fill sizes="48px" className="object-contain p-1 brightness-0 invert" />
+            <span className="relative flex size-14 items-center justify-center rounded-xl border border-white/20 bg-white/[0.07]">
+              <Image src="/assets/logo-transparent.png" alt="" fill sizes="56px" className="object-contain p-2 brightness-0 invert" />
             </span>
             <span className="leading-none">
               <span className="block font-serif text-xl font-black italic tracking-widest text-white sm:text-2xl">{t.brand}</span>
@@ -578,8 +578,8 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
             <div className="flex items-center gap-3">
-              <span className="relative flex size-12 items-center justify-center rounded-xl border border-white/20 bg-white/[0.07]">
-                <Image src="/assets/logo-transparent.png" alt="" fill sizes="48px" className="object-contain p-1 brightness-0 invert" />
+              <span className="relative flex size-14 items-center justify-center rounded-xl border border-white/20 bg-white/[0.07]">
+                <Image src="/assets/logo-transparent.png" alt="" fill sizes="56px" className="object-contain p-2 brightness-0 invert" />
               </span>
               <span>
                 <span className="block font-serif text-2xl font-black italic tracking-widest text-white">{t.brand}</span>

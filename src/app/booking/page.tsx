@@ -499,8 +499,8 @@ export default function BookingPage() {
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050b17]/[0.88] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <Link href="/" className="flex items-center gap-2 text-sm font-black text-white">
-            <span className="relative size-11 rounded-xl border border-white/20 bg-white/[0.07]">
-              <Image src="/assets/logo-transparent.png" alt="" fill sizes="44px" className="object-contain p-1 brightness-0 invert" />
+            <span className="relative size-12 rounded-xl border border-white/20 bg-white/[0.07]">
+              <Image src="/assets/logo-transparent.png" alt="" fill sizes="48px" className="object-contain p-2 brightness-0 invert" />
             </span>
             {t.back}
           </Link>
