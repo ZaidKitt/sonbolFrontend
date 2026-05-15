@@ -74,7 +74,7 @@ const copy = {
     locationEyebrow: "موقعنا 📍",
     locationTitle: "الأردن - البلقاء - عين الباشا",
     locationText: "بإمكانك الضغط على الرابط أدناه للوصول إلى الموقع الجغرافي.",
-    locationAddress: "الأردن - البلقاء - عين الباشا",
+    locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
     phoneLabel: "الهاتف",
     hoursLabel: "الدوام",
     inStock: "متوفر",
@@ -159,7 +159,7 @@ const copy = {
     locationEyebrow: "Our location 📍",
     locationTitle: "Jordan - Balqa - Ein Al-Basha",
     locationText: "Use the link below to reach the location on Google Maps.",
-    locationAddress: "Jordan - Balqa - Ein Al-Basha",
+    locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
     phoneLabel: "Phone",
     hoursLabel: "Hours",
     inStock: "In stock",
@@ -266,7 +266,7 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:h-[76px]">
           <a href="#top" className="flex min-w-0 items-center gap-3" aria-label={t.brandAr}>
             <span className="relative flex size-9 items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/[0.07]">
-              <Image src="/assets/logo-transparent.png" alt="" fill sizes="36px" className="object-contain p-1.5 brightness-0 invert" />
+              <Image src="/assets/logo-transparent.png" alt="" fill sizes="36px" className="object-contain p-0.5 brightness-0 invert scale-[1.38]" />
             </span>
             <span className="leading-none">
               <span className="block font-serif text-xl font-black italic tracking-widest text-white sm:text-2xl">{t.brand}</span>
@@ -579,7 +579,7 @@ export default function Home() {
           <div>
             <div className="flex items-center gap-3">
               <span className="relative flex size-10 items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/[0.07]">
-                <Image src="/assets/logo-transparent.png" alt="" fill sizes="40px" className="object-contain p-1.5 brightness-0 invert" />
+                <Image src="/assets/logo-transparent.png" alt="" fill sizes="40px" className="object-contain p-0.5 brightness-0 invert scale-[1.38]" />
               </span>
               <span>
                 <span className="block font-serif text-2xl font-black italic tracking-widest text-white">{t.brand}</span>

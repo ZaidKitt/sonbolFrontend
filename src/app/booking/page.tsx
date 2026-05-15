@@ -500,7 +500,7 @@ export default function BookingPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <Link href="/" className="flex items-center gap-2 text-sm font-black text-white">
             <span className="relative size-8 overflow-hidden rounded-lg border border-white/20 bg-white/[0.07]">
-              <Image src="/assets/logo-transparent.png" alt="" fill sizes="32px" className="object-contain p-1 brightness-0 invert" />
+              <Image src="/assets/logo-transparent.png" alt="" fill sizes="32px" className="object-contain p-0.5 brightness-0 invert scale-[1.38]" />
             </span>
             {t.back}
           </Link>
