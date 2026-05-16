@@ -15,7 +15,7 @@ type Service = {
   price_label_ar: string;
   price_label_en: string;
   duration_minutes: number;
-  booking_type: "standard" | "split_90";
+  booking_type: "standard" | "split_90" | "fast_5";
 };
 
 type Barber = {

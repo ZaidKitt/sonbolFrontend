@@ -103,9 +103,10 @@ const copy = {
       },
       {
         title: "العناية والتجهيز",
-        count: "4 خدمات",
+        count: "5 خدمات",
         items: [
           { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
+          { code: "steam-oil-bath", name: "حمام زيت عالبخار", meta: "30 دقيقة", price: "10 د.أ" },
           { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
           { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
           { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
@@ -188,9 +189,10 @@ const copy = {
       },
       {
         title: "Care and Styling",
-        count: "4 services",
+        count: "5 services",
         items: [
           { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
+          { code: "steam-oil-bath", name: "Steam Oil Bath", meta: "30 min", price: "10 JOD" },
           { code: "protein", name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
           { code: "skin-cleaning", name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
           { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
