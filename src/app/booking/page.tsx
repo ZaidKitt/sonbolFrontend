@@ -177,6 +177,14 @@ function todayDateString(offsetDays: number) {
   return `${year}-${month}-${day}`;
 }
 
+function isTuesday(value: string) {
+  return new Date(`${value}T12:00:00`).getDay() === 2;
+}
+
+function bookableDateStrings() {
+  return Array.from({ length: 15 }, (_, index) => todayDateString(index)).filter((dateValue) => !isTuesday(dateValue));
+}
+
 function formatDay(value: string, lang: Language) {
   return new Intl.DateTimeFormat(lang === "ar" ? "ar-JO" : "en-US", {
     weekday: "short",
@@ -231,6 +239,10 @@ function formatBookingAmount(service: Service | null, wantsDisposableTowel: bool
   return `${prefix}${amount} JOD`;
 }
 
+function isGroomPackage(service: Service) {
+  return service.code === "groom-package";
+}
+
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
   if (init?.body && !headers.has("Content-Type")) {
@@ -271,7 +283,7 @@ export default function BookingPage() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
   const [selectedBarberId, setSelectedBarberId] = useState<number | null>(null);
-  const [selectedDate, setSelectedDate] = useState(todayDateString(0));
+  const [selectedDate, setSelectedDate] = useState(() => bookableDateStrings()[0] ?? todayDateString(0));
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [wantsDisposableTowel, setWantsDisposableTowel] = useState(false);
@@ -292,7 +304,7 @@ export default function BookingPage() {
 
   const t = copy[lang];
   const isArabic = lang === "ar";
-  const dates = useMemo(() => Array.from({ length: 15 }, (_, index) => todayDateString(index)), []);
+  const dates = useMemo(() => bookableDateStrings(), []);
   const selectedService = services.find((service) => service.id === selectedServiceId) ?? null;
   const selectedBarber = barbers.find((barber) => barber.id === selectedBarberId) ?? null;
   const bookingAmount = formatBookingAmount(selectedService, wantsDisposableTowel, lang);
@@ -607,7 +619,12 @@ export default function BookingPage() {
                             setSelectedServiceId(service.id);
                             setSelectedSlot(null);
                             setWantsDisposableTowel(false);
-                            setTowelPromptOpen(true);
+                            if (isGroomPackage(service)) {
+                              setTowelPromptOpen(false);
+                              scrollToStepControls();
+                            } else {
+                              setTowelPromptOpen(true);
+                            }
                           }}
                         >
                           <span className="block whitespace-normal break-words text-lg font-black leading-7">{isArabic ? service.name_ar : service.name_en}</span>
