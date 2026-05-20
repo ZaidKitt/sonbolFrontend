@@ -275,6 +275,7 @@ export default function BookingPage() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [wantsDisposableTowel, setWantsDisposableTowel] = useState(false);
+  const [towelPromptOpen, setTowelPromptOpen] = useState(false);
   const [form, setForm] = useState<FormState>({
     customer_name: "",
     customer_email: "",
@@ -286,6 +287,7 @@ export default function BookingPage() {
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<AppointmentResponse | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
+  const navigationRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollToStep = useRef(false);
 
   const t = copy[lang];
@@ -304,6 +306,21 @@ export default function BookingPage() {
       }
 
       const top = target.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({
+        top: Math.max(top, 0),
+        behavior: "smooth",
+      });
+    });
+  }
+
+  function scrollToStepControls() {
+    window.requestAnimationFrame(() => {
+      const target = navigationRef.current;
+      if (!target) {
+        return;
+      }
+
+      const top = target.getBoundingClientRect().top + window.scrollY - 96;
       window.scrollTo({
         top: Math.max(top, 0),
         behavior: "smooth",
@@ -452,6 +469,12 @@ export default function BookingPage() {
     setStepIndex(index);
   }
 
+  function chooseDisposableTowel(wantsTowel: boolean) {
+    setWantsDisposableTowel(wantsTowel);
+    setTowelPromptOpen(false);
+    scrollToStepControls();
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -583,6 +606,8 @@ export default function BookingPage() {
                           onClick={() => {
                             setSelectedServiceId(service.id);
                             setSelectedSlot(null);
+                            setWantsDisposableTowel(false);
+                            setTowelPromptOpen(true);
                           }}
                         >
                           <span className="block whitespace-normal break-words text-lg font-black leading-7">{isArabic ? service.name_ar : service.name_en}</span>
@@ -593,30 +618,6 @@ export default function BookingPage() {
                       );
                     })}
                   </div>
-                  {selectedService ? (
-                    <div className="mt-4 rounded-lg border border-white/[0.14] bg-[#081426] p-4">
-                      <p className="text-sm font-black text-[#d6bf86]">{t.addOns}</p>
-                      <button
-                        type="button"
-                        className={`mt-3 flex w-full items-center justify-between gap-4 rounded-lg border p-4 text-start transition ${
-                          wantsDisposableTowel
-                            ? "border-[#d6bf86] bg-[#d6bf86] text-[#071426]"
-                            : "border-white/[0.14] bg-[#0b1628]/80 text-white hover:border-[#d6bf86]/60"
-                        }`}
-                        onClick={() => setWantsDisposableTowel((current) => !current)}
-                      >
-                        <span>
-                          <strong className="block text-base font-black">{t.disposableTowel}</strong>
-                          <small className={`mt-1 block text-sm font-bold ${wantsDisposableTowel ? "text-[#071426]/70" : "text-slate-400"}`}>
-                            {t.disposableTowelText}
-                          </small>
-                        </span>
-                        <span className={`grid size-9 shrink-0 place-items-center rounded-full border text-sm font-black ${wantsDisposableTowel ? "border-[#071426]/25 bg-[#071426] text-white" : "border-white/[0.18] bg-white/[0.06] text-[#d6bf86]"}`}>
-                          +1
-                        </span>
-                      </button>
-                    </div>
-                  ) : null}
                 </section>
               ) : null}
 
@@ -639,6 +640,7 @@ export default function BookingPage() {
                           onClick={() => {
                             setSelectedBarberId(barber.id);
                             setSelectedSlot(null);
+                            scrollToStepControls();
                           }}
                         >
                           <span className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/[0.18] bg-[#101d31] text-lg font-black">
@@ -681,6 +683,7 @@ export default function BookingPage() {
                           onClick={() => {
                             setSelectedDate(dateValue);
                             setSelectedSlot(null);
+                            scrollToStepControls();
                           }}
                         >
                           <span className="block text-base font-black">{formatDay(dateValue, lang)}</span>
@@ -712,7 +715,10 @@ export default function BookingPage() {
                                 ? "border-[#d6bf86] bg-[#d6bf86] text-[#071426]"
                                 : "border-white/[0.14] bg-[#0b1628]/80 text-white hover:border-[#d6bf86]/60"
                             }`}
-                            onClick={() => setSelectedSlot(slot)}
+                            onClick={() => {
+                              setSelectedSlot(slot);
+                              scrollToStepControls();
+                            }}
                           >
                             {displayTime(slot.time, lang)}
                           </button>
@@ -783,7 +789,7 @@ export default function BookingPage() {
               </div>
             </div>
 
-            <div className="mt-5 flex gap-3 border-t border-white/[0.10] pt-4">
+            <div ref={navigationRef} className="mt-5 flex gap-3 border-t border-white/[0.10] pt-4">
               <button
                 type="button"
                 className="min-h-12 flex-1 rounded-lg border border-white/[0.18] bg-white/[0.06] px-5 text-sm font-black text-white transition hover:bg-white/[0.1]"
@@ -815,6 +821,32 @@ export default function BookingPage() {
         </div>
       </section>
 
+      {towelPromptOpen && selectedService ? (
+        <div className="fixed inset-0 z-50 grid place-items-end bg-black/[0.72] p-3 backdrop-blur-sm sm:place-items-center">
+          <div className="w-full max-w-md animate-[rise_260ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.48)]" role="dialog" aria-modal="true">
+            <p className="text-sm font-black text-[#d6bf86]">{t.addOns}</p>
+            <h2 className="mt-3 text-2xl font-black leading-tight">{t.disposableTowel}</h2>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-300">{t.disposableTowelText}</p>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                className="min-h-12 rounded-lg border border-white/[0.18] bg-white/[0.06] px-5 text-sm font-black text-white transition hover:bg-white/[0.1]"
+                onClick={() => chooseDisposableTowel(false)}
+              >
+                {t.no}
+              </button>
+              <button
+                type="button"
+                className="min-h-12 rounded-lg bg-white px-5 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
+                onClick={() => chooseDisposableTowel(true)}
+              >
+                {t.yes}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {confirmation ? (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/[0.72] p-3 backdrop-blur-sm sm:place-items-center">
           <div data-testid="payment-modal" className="w-full max-w-lg animate-[rise_260ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.48)]" role="dialog" aria-modal="true">
@@ -839,6 +871,7 @@ export default function BookingPage() {
                 setConfirmation(null);
                 setSelectedSlot(null);
                 setWantsDisposableTowel(false);
+                setTowelPromptOpen(false);
                 setStepIndex(0);
               }}
             >
