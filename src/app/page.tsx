@@ -83,6 +83,9 @@ const copy = {
     restockTitle: "غير متوفر حالياً",
     buyMessage: "لشراء هذا المنتج اتصل بصالون سنبل على:",
     restockMessage: "المنتج غير متوفر حالياً. إذا تريده اتصل بصالون سنبل، وغالباً يصل أقرب يوم خميس.",
+    groomBookingTitle: "حجز بكج العريس",
+    groomBookingText: "لحجز بكج العريس، يرجى الاتصال بصالون سنبل مباشرة حتى يتم ترتيب التفاصيل والوقت المناسب.",
+    callSalon: "اتصل بصالون سنبل",
     close: "إغلاق",
     finalTitle: "جاهز ترتب موعدك؟",
     finalText: "اختار الخدمة والوقت المناسب، وبعد تحويل المبلغ على كليك يتم تثبيت الحجز.",
@@ -169,6 +172,9 @@ const copy = {
     restockTitle: "Currently out of stock",
     buyMessage: "To buy this product, call Sonbol Salon at:",
     restockMessage: "This product is currently out of stock. Call Sonbol Salon if you want it. It usually arrives on the nearest Thursday.",
+    groomBookingTitle: "Groom package booking",
+    groomBookingText: "To book the groom package, please call Sonbol Salon directly so the details and timing can be arranged.",
+    callSalon: "Call Sonbol Salon",
     close: "Close",
     finalTitle: "Ready to set your time?",
     finalText: "Choose your service and time. After the CLIQ transfer arrives, the appointment is confirmed.",
@@ -221,6 +227,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [groomContactOpen, setGroomContactOpen] = useState(false);
   const t = copy[lang];
   const isArabic = lang === "ar";
 
@@ -392,19 +399,40 @@ export default function Home() {
                   <span className="rounded-full border border-white/[0.18] px-3 py-1 text-xs font-black text-slate-300">{group.count}</span>
                 </div>
                 <div className="grid gap-3">
-                  {group.items.map((service) => (
-                    <Link
-                      className="block rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
-                      href={`/booking?service=${encodeURIComponent(service.code)}`}
-                      key={service.name}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <h4 className="text-base font-black leading-7 text-white">{service.name}</h4>
-                        <strong className="shrink-0 text-sm font-black text-[#d6bf86]">{service.price}</strong>
-                      </div>
-                      <p className="mt-3 text-sm font-bold text-slate-400">{service.meta}</p>
-                    </Link>
-                  ))}
+                  {group.items.map((service) => {
+                    const cardContent = (
+                      <>
+                        <div className="flex items-start justify-between gap-3">
+                          <h4 className="text-base font-black leading-7 text-white">{service.name}</h4>
+                          <strong className="shrink-0 text-sm font-black text-[#d6bf86]">{service.price}</strong>
+                        </div>
+                        <p className="mt-3 text-sm font-bold text-slate-400">{service.meta}</p>
+                      </>
+                    );
+
+                    if (service.code === "groom-package") {
+                      return (
+                        <button
+                          className="block w-full rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 text-start transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
+                          key={service.name}
+                          type="button"
+                          onClick={() => setGroomContactOpen(true)}
+                        >
+                          {cardContent}
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <Link
+                        className="block rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
+                        href={`/booking?service=${encodeURIComponent(service.code)}`}
+                        key={service.name}
+                      >
+                        {cardContent}
+                      </Link>
+                    );
+                  })}
                 </div>
               </article>
             ))}
@@ -631,6 +659,26 @@ export default function Home() {
               type="button"
               className="mt-5 flex w-full items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-black text-[#071426]"
               onClick={() => setSelectedProduct(null)}
+            >
+              {t.close}
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {groomContactOpen ? (
+        <div className="fixed inset-0 z-50 grid place-items-end bg-black/70 p-3 backdrop-blur-sm sm:place-items-center">
+          <div className="w-full max-w-md animate-[rise_240ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+            <p className="text-sm font-black text-[#c8ad72]">{isArabic ? "بكج العريس" : "Groom Package"}</p>
+            <h2 className="mt-3 text-2xl font-black">{t.groomBookingTitle}</h2>
+            <p className="mt-4 text-sm font-bold leading-7 text-slate-300">{t.groomBookingText}</p>
+            <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE}`}>
+              {t.callSalon}: {SHOP_PHONE}
+            </a>
+            <button
+              type="button"
+              className="mt-5 flex w-full items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-black text-[#071426]"
+              onClick={() => setGroomContactOpen(false)}
             >
               {t.close}
             </button>

@@ -73,6 +73,9 @@ const copy = {
     addOns: "إضافات الموعد",
     disposableTowel: "منشفة استخدام مرة واحدة",
     disposableTowelText: "أضف منشفة جديدة للموعد مقابل 1 د.أ.",
+    groomBookingTitle: "حجز بكج العريس",
+    groomBookingText: "لحجز بكج العريس، يرجى الاتصال بصالون سنبل مباشرة حتى يتم ترتيب التفاصيل والوقت المناسب.",
+    callSalon: "اتصل بصالون سنبل",
     towelSummary: "المنشفة",
     total: "المبلغ",
     yes: "نعم",
@@ -122,6 +125,9 @@ const copy = {
     addOns: "Appointment add-ons",
     disposableTowel: "Single-use towel",
     disposableTowelText: "Add a fresh single-use towel for 1 JOD.",
+    groomBookingTitle: "Groom package booking",
+    groomBookingText: "To book the groom package, please call Sonbol Salon directly so the details and timing can be arranged.",
+    callSalon: "Call Sonbol Salon",
     towelSummary: "Towel",
     total: "Amount",
     yes: "Yes",
@@ -288,6 +294,7 @@ export default function BookingPage() {
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [wantsDisposableTowel, setWantsDisposableTowel] = useState(false);
   const [towelPromptOpen, setTowelPromptOpen] = useState(false);
+  const [groomContactOpen, setGroomContactOpen] = useState(false);
   const [form, setForm] = useState<FormState>({
     customer_name: "",
     customer_email: "",
@@ -364,7 +371,11 @@ export default function BookingPage() {
         setServices(servicesData);
         setBarbers(barbersData);
         if (matchedService) {
-          setSelectedServiceId(matchedService.id);
+          if (isGroomPackage(matchedService)) {
+            setGroomContactOpen(true);
+          } else {
+            setSelectedServiceId(matchedService.id);
+          }
         }
       } catch (loadError) {
         if (active) {
@@ -616,13 +627,14 @@ export default function BookingPage() {
                               : "border-white/[0.14] bg-[#0b1628]/80 text-white hover:border-[#d6bf86]/60"
                           }`}
                           onClick={() => {
-                            setSelectedServiceId(service.id);
                             setSelectedSlot(null);
                             setWantsDisposableTowel(false);
                             if (isGroomPackage(service)) {
+                              setSelectedServiceId(null);
                               setTowelPromptOpen(false);
-                              scrollToStepControls();
+                              setGroomContactOpen(true);
                             } else {
+                              setSelectedServiceId(service.id);
                               setTowelPromptOpen(true);
                             }
                           }}
@@ -864,6 +876,29 @@ export default function BookingPage() {
         </div>
       ) : null}
 
+      {groomContactOpen ? (
+        <div className="fixed inset-0 z-50 grid place-items-end bg-black/[0.72] p-3 backdrop-blur-sm sm:place-items-center">
+          <div className="w-full max-w-md animate-[rise_260ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.48)]" role="dialog" aria-modal="true">
+            <p className="text-sm font-black text-[#d6bf86]">{isArabic ? "بكج العريس" : "Groom Package"}</p>
+            <h2 className="mt-3 text-2xl font-black leading-tight">{t.groomBookingTitle}</h2>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-300">{t.groomBookingText}</p>
+            <a
+              className="mt-5 flex min-h-12 w-full items-center justify-center rounded-lg bg-white px-5 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
+              href={`tel:${SHOP_PHONE}`}
+            >
+              {t.callSalon}: {SHOP_PHONE}
+            </a>
+            <button
+              type="button"
+              className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg border border-white/[0.18] bg-white/[0.06] px-5 text-sm font-black text-white transition hover:bg-white/[0.1]"
+              onClick={() => setGroomContactOpen(false)}
+            >
+              {t.close}
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {confirmation ? (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/[0.72] p-3 backdrop-blur-sm sm:place-items-center">
           <div data-testid="payment-modal" className="w-full max-w-lg animate-[rise_260ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.48)]" role="dialog" aria-modal="true">
@@ -889,6 +924,7 @@ export default function BookingPage() {
                 setSelectedSlot(null);
                 setWantsDisposableTowel(false);
                 setTowelPromptOpen(false);
+                setGroomContactOpen(false);
                 setStepIndex(0);
               }}
             >
