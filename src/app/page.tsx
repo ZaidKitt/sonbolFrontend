@@ -96,23 +96,23 @@ const copy = {
     serviceGroups: [
       {
         title: "الشعر واللحية",
-        count: "4 خدمات",
+        count: "5 خدمات",
         items: [
           { code: "hair-beard-blowdry-scrub-mask", name: "شعر + لحية + سشوار + سنفرة أو ماسك", meta: "40 دقيقة", price: "7 د.أ" },
           { code: "haircut", name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
           { code: "beard", name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
+          { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
           { code: "kids", name: "قص أطفال", meta: "20 دقيقة", price: "3 د.أ" },
         ],
       },
       {
         title: "العناية والتجهيز",
-        count: "5 خدمات",
+        count: "4 خدمات",
         items: [
           { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
           { code: "steam-oil-bath", name: "حمام زيت عالبخار", meta: "30 دقيقة", price: "10 د.أ" },
           { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
           { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
-          { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
         ],
       },
       {
@@ -185,23 +185,23 @@ const copy = {
     serviceGroups: [
       {
         title: "Hair and Beard",
-        count: "4 services",
+        count: "5 services",
         items: [
           { code: "hair-beard-blowdry-scrub-mask", name: "Hair + Beard + Blow Dry + Scrub or Mask", meta: "40 min", price: "7 JOD" },
           { code: "haircut", name: "Haircut", meta: "30 min", price: "4 JOD" },
           { code: "beard", name: "Beard Trim", meta: "20 min", price: "3 JOD" },
+          { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
           { code: "kids", name: "Kids Haircut", meta: "20 min", price: "3 JOD" },
         ],
       },
       {
         title: "Care and Styling",
-        count: "5 services",
+        count: "4 services",
         items: [
           { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
           { code: "steam-oil-bath", name: "Steam Oil Bath", meta: "30 min", price: "10 JOD" },
           { code: "protein", name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
           { code: "skin-cleaning", name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
-          { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
         ],
       },
       {
