@@ -110,7 +110,7 @@ const copy = {
         count: "4 خدمات",
         items: [
           { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
-          { code: "steam-oil-bath", name: "حمام زيت عالبخار", meta: "30 دقيقة", price: "10 د.أ" },
+          { code: "steam-oil-bath", name: "حمام زيت على البخار", meta: "30 دقيقة", price: "10 د.أ" },
           { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
           { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
         ],
