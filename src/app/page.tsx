@@ -19,7 +19,7 @@ type ServiceItem = {
   code: string;
   name: string;
   meta: string;
-  price: string;
+  price?: string;
 };
 
 type ServiceGroup = {
@@ -118,7 +118,7 @@ const copy = {
       {
         title: "المناسبات",
         count: "خدمة واحدة",
-        items: [{ code: "groom-package", name: "بكج العريس", meta: "3 ساعات", price: "50 د.أ" }],
+        items: [{ code: "groom-package", name: "بكج العريس", meta: "3 ساعات" }],
       },
     ] satisfies ServiceGroup[],
   },
@@ -207,7 +207,7 @@ const copy = {
       {
         title: "Occasions",
         count: "1 service",
-        items: [{ code: "groom-package", name: "Groom Package", meta: "3h", price: "50 JOD" }],
+        items: [{ code: "groom-package", name: "Groom Package", meta: "3h" }],
       },
     ] satisfies ServiceGroup[],
   },
@@ -404,7 +404,9 @@ export default function Home() {
                       <>
                         <div className="flex items-start justify-between gap-3">
                           <h4 className="text-base font-black leading-7 text-white">{service.name}</h4>
-                          <strong className="shrink-0 text-sm font-black text-[#d6bf86]">{service.price}</strong>
+                          {"price" in service && service.price ? (
+                            <strong className="shrink-0 text-sm font-black text-[#d6bf86]">{service.price}</strong>
+                          ) : null}
                         </div>
                         <p className="mt-3 text-sm font-bold text-slate-400">{service.meta}</p>
                       </>

@@ -641,7 +641,9 @@ export default function BookingPage() {
                         >
                           <span className="block whitespace-normal break-words text-lg font-black leading-7">{isArabic ? service.name_ar : service.name_en}</span>
                           <small className={`mt-3 block text-sm font-black ${selected ? "text-[#071426]/70" : "text-[#d6bf86]"}`}>
-                            {isArabic ? service.price_label_ar : service.price_label_en} · {formatDuration(service.duration_minutes, lang)}
+                            {isGroomPackage(service)
+                              ? formatDuration(service.duration_minutes, lang)
+                              : `${isArabic ? service.price_label_ar : service.price_label_en} · ${formatDuration(service.duration_minutes, lang)}`}
                           </small>
                         </button>
                       );
