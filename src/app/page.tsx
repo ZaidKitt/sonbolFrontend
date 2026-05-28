@@ -102,7 +102,7 @@ const copy = {
           { code: "haircut", name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
           { code: "beard", name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
           { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
-          { code: "kids", name: "قص أطفال", meta: "20 دقيقة", price: "3 د.أ" },
+          { code: "kids", name: "قص أطفال", meta: "20 دقيقة", price: "5 د.أ" },
         ],
       },
       {
@@ -191,7 +191,7 @@ const copy = {
           { code: "haircut", name: "Haircut", meta: "30 min", price: "4 JOD" },
           { code: "beard", name: "Beard Trim", meta: "20 min", price: "3 JOD" },
           { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
-          { code: "kids", name: "Kids Haircut", meta: "20 min", price: "3 JOD" },
+          { code: "kids", name: "Kids Haircut", meta: "20 min", price: "5 JOD" },
         ],
       },
       {
