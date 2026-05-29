@@ -93,6 +93,7 @@ const copy = {
     footerQuick: "روابط سريعة",
     footerContact: "تواصل",
     footerRights: "سنبل. كل الحقوق محفوظة.",
+    footerCredit: "تطوير ZaidKitt",
     serviceGroups: [
       {
         title: "الشعر واللحية",
@@ -182,6 +183,7 @@ const copy = {
     footerQuick: "Quick links",
     footerContact: "Contact",
     footerRights: "Sonbol. All rights reserved.",
+    footerCredit: "Developed by ZaidKitt",
     serviceGroups: [
       {
         title: "Hair and Beard",
@@ -643,8 +645,16 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 pt-5 text-xs font-bold text-slate-500">
-          {t.footerRights}
+        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-5 text-xs font-bold text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <span>{t.footerRights}</span>
+          <a
+            className="text-[#c8ad72] transition hover:text-white"
+            href="https://www.instagram.com/zaidkitt/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t.footerCredit}
+          </a>
         </div>
       </footer>
 
