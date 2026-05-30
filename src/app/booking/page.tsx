@@ -15,7 +15,9 @@ type Service = {
   price_label_ar: string;
   price_label_en: string;
   duration_minutes: number;
-  booking_type: "standard" | "split_90" | "fast_5";
+  booking_type: "standard" | "split_90" | "fast_5" | "groom_90" | "call_only";
+  display_meta_ar?: string;
+  display_meta_en?: string;
 };
 
 type Barber = {
@@ -50,6 +52,34 @@ type FormState = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
+const CALL_ONLY_SERVICES: Service[] = [
+  {
+    id: -101,
+    code: "monthly-package-3",
+    name_ar: "3 حلقات في الشهر",
+    name_en: "3 haircuts per month",
+    price_jod: "18.00",
+    price_label_ar: "18 د.أ",
+    price_label_en: "18 JOD",
+    duration_minutes: 0,
+    booking_type: "call_only",
+    display_meta_ar: "اشتراك شهري",
+    display_meta_en: "Monthly package",
+  },
+  {
+    id: -102,
+    code: "monthly-package-4",
+    name_ar: "4 حلقات في الشهر",
+    name_en: "4 haircuts per month",
+    price_jod: "20.00",
+    price_label_ar: "20 د.أ",
+    price_label_en: "20 JOD",
+    duration_minutes: 0,
+    booking_type: "call_only",
+    display_meta_ar: "اشتراك شهري",
+    display_meta_en: "Monthly package",
+  },
+];
 
 const copy = {
   ar: {
@@ -75,6 +105,8 @@ const copy = {
     disposableTowelText: "أضف منشفة جديدة للموعد مقابل 1 د.أ.",
     groomBookingTitle: "حجز بكج العريس",
     groomBookingText: "لحجز بكج العريس، يرجى الاتصال بصالون سنبل مباشرة حتى يتم ترتيب التفاصيل والوقت المناسب.",
+    monthlyBookingTitle: "البكجات الشهرية",
+    monthlyBookingText: "للاشتراك أو الاستفسار عن البكجات الشهرية، يرجى الاتصال بصالون سنبل مباشرة.",
     callSalon: "اتصل بصالون سنبل",
     towelSummary: "المنشفة",
     total: "المبلغ",
@@ -127,6 +159,8 @@ const copy = {
     disposableTowelText: "Add a fresh single-use towel for 1 JOD.",
     groomBookingTitle: "Groom package booking",
     groomBookingText: "To book the groom package, please call Sonbol Salon directly so the details and timing can be arranged.",
+    monthlyBookingTitle: "Monthly packages",
+    monthlyBookingText: "To subscribe or ask about monthly packages, please call Sonbol Salon directly.",
     callSalon: "Call Sonbol Salon",
     towelSummary: "Towel",
     total: "Amount",
@@ -249,6 +283,28 @@ function isGroomPackage(service: Service) {
   return service.code === "groom-package";
 }
 
+function isCallOnlyService(service: Service) {
+  return isGroomPackage(service) || service.booking_type === "call_only";
+}
+
+function isMonthlyPackage(service: Service) {
+  return service.booking_type === "call_only";
+}
+
+function serviceOptionMeta(service: Service, lang: Language) {
+  if (isGroomPackage(service)) {
+    return formatDuration(service.duration_minutes, lang);
+  }
+
+  if (isMonthlyPackage(service)) {
+    const price = lang === "ar" ? service.price_label_ar : service.price_label_en;
+    const meta = lang === "ar" ? service.display_meta_ar : service.display_meta_en;
+    return meta ? `${price} · ${meta}` : price;
+  }
+
+  return `${lang === "ar" ? service.price_label_ar : service.price_label_en} · ${formatDuration(service.duration_minutes, lang)}`;
+}
+
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
   if (init?.body && !headers.has("Content-Type")) {
@@ -294,7 +350,7 @@ export default function BookingPage() {
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [wantsDisposableTowel, setWantsDisposableTowel] = useState(false);
   const [towelPromptOpen, setTowelPromptOpen] = useState(false);
-  const [groomContactOpen, setGroomContactOpen] = useState(false);
+  const [contactService, setContactService] = useState<Service | null>(null);
   const [form, setForm] = useState<FormState>({
     customer_name: "",
     customer_email: "",
@@ -363,16 +419,19 @@ export default function BookingPage() {
           return;
         }
 
+        const groomServices = servicesData.filter((service) => isGroomPackage(service));
+        const bookableServices = servicesData.filter((service) => !isGroomPackage(service));
+        const allServices = [...bookableServices, ...CALL_ONLY_SERVICES, ...groomServices];
         const requestedService = new URLSearchParams(window.location.search).get("service");
         const matchedService = requestedService
-          ? servicesData.find((service) => service.code === requestedService || String(service.id) === requestedService)
+          ? allServices.find((service) => service.code === requestedService || String(service.id) === requestedService)
           : null;
 
-        setServices(servicesData);
+        setServices(allServices);
         setBarbers(barbersData);
         if (matchedService) {
-          if (isGroomPackage(matchedService)) {
-            setGroomContactOpen(true);
+          if (isCallOnlyService(matchedService)) {
+            setContactService(matchedService);
           } else {
             setSelectedServiceId(matchedService.id);
           }
@@ -629,10 +688,10 @@ export default function BookingPage() {
                           onClick={() => {
                             setSelectedSlot(null);
                             setWantsDisposableTowel(false);
-                            if (isGroomPackage(service)) {
+                            if (isCallOnlyService(service)) {
                               setSelectedServiceId(null);
                               setTowelPromptOpen(false);
-                              setGroomContactOpen(true);
+                              setContactService(service);
                             } else {
                               setSelectedServiceId(service.id);
                               setTowelPromptOpen(true);
@@ -641,9 +700,7 @@ export default function BookingPage() {
                         >
                           <span className="block whitespace-normal break-words text-lg font-black leading-7">{isArabic ? service.name_ar : service.name_en}</span>
                           <small className={`mt-3 block text-sm font-black ${selected ? "text-[#071426]/70" : "text-[#d6bf86]"}`}>
-                            {isGroomPackage(service)
-                              ? formatDuration(service.duration_minutes, lang)
-                              : `${isArabic ? service.price_label_ar : service.price_label_en} · ${formatDuration(service.duration_minutes, lang)}`}
+                            {serviceOptionMeta(service, lang)}
                           </small>
                         </button>
                       );
@@ -878,12 +935,16 @@ export default function BookingPage() {
         </div>
       ) : null}
 
-      {groomContactOpen ? (
+      {contactService ? (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/[0.72] p-3 backdrop-blur-sm sm:place-items-center">
           <div className="w-full max-w-md animate-[rise_260ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.48)]" role="dialog" aria-modal="true">
-            <p className="text-sm font-black text-[#d6bf86]">{isArabic ? "بكج العريس" : "Groom Package"}</p>
-            <h2 className="mt-3 text-2xl font-black leading-tight">{t.groomBookingTitle}</h2>
-            <p className="mt-3 text-sm font-bold leading-7 text-slate-300">{t.groomBookingText}</p>
+            <p className="text-sm font-black text-[#d6bf86]">{isArabic ? contactService.name_ar : contactService.name_en}</p>
+            <h2 className="mt-3 text-2xl font-black leading-tight">
+              {isGroomPackage(contactService) ? t.groomBookingTitle : t.monthlyBookingTitle}
+            </h2>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-300">
+              {isGroomPackage(contactService) ? t.groomBookingText : t.monthlyBookingText}
+            </p>
             <a
               className="mt-5 flex min-h-12 w-full items-center justify-center rounded-lg bg-white px-5 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
               href={`tel:${SHOP_PHONE}`}
@@ -893,7 +954,7 @@ export default function BookingPage() {
             <button
               type="button"
               className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg border border-white/[0.18] bg-white/[0.06] px-5 text-sm font-black text-white transition hover:bg-white/[0.1]"
-              onClick={() => setGroomContactOpen(false)}
+              onClick={() => setContactService(null)}
             >
               {t.close}
             </button>
@@ -926,7 +987,7 @@ export default function BookingPage() {
                 setSelectedSlot(null);
                 setWantsDisposableTowel(false);
                 setTowelPromptOpen(false);
-                setGroomContactOpen(false);
+                setContactService(null);
                 setStepIndex(0);
               }}
             >

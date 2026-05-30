@@ -28,6 +28,7 @@ type ServiceGroup = {
   items: ServiceItem[];
 };
 
+const CALL_ONLY_SERVICE_CODES = new Set(["groom-package", "monthly-package-3", "monthly-package-4"]);
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
 const LOCATION_URL = "https://maps.app.goo.gl/pqGYKWD1NurxMs1W7?g_st=ic";
@@ -85,6 +86,8 @@ const copy = {
     restockMessage: "المنتج غير متوفر حالياً. إذا تريده اتصل بصالون سنبل، وغالباً يصل أقرب يوم خميس.",
     groomBookingTitle: "حجز بكج العريس",
     groomBookingText: "لحجز بكج العريس، يرجى الاتصال بصالون سنبل مباشرة حتى يتم ترتيب التفاصيل والوقت المناسب.",
+    monthlyBookingTitle: "البكجات الشهرية",
+    monthlyBookingText: "للاشتراك أو الاستفسار عن البكجات الشهرية، اتصل بصالون سنبل مباشرة.",
     callSalon: "اتصل بصالون سنبل",
     close: "إغلاق",
     finalTitle: "جاهز ترتب موعدك؟",
@@ -97,23 +100,31 @@ const copy = {
     serviceGroups: [
       {
         title: "الشعر واللحية",
-        count: "5 خدمات",
+        count: "6 خدمات",
         items: [
           { code: "hair-beard-blowdry-scrub-mask", name: "شعر + لحية + سشوار + سنفرة أو ماسك", meta: "40 دقيقة", price: "7 د.أ" },
           { code: "haircut", name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
           { code: "beard", name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
+          { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
           { code: "home-haircut", name: "حلاقة منزلية", meta: "ساعة و30 دقيقة", price: "20 د.أ" },
           { code: "kids", name: "قص أطفال", meta: "20 دقيقة", price: "3 د.أ" },
         ],
       },
       {
         title: "العناية والتجهيز",
-        count: "4 خدمات",
+        count: "3 خدمات",
         items: [
-          { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
           { code: "steam-oil-bath", name: "حمام زيت على البخار", meta: "30 دقيقة", price: "10 د.أ" },
           { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
           { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
+        ],
+      },
+      {
+        title: "البكجات الشهرية",
+        count: "بكجان",
+        items: [
+          { code: "monthly-package-3", name: "3 حلقات في الشهر", meta: "اشتراك شهري", price: "18 د.أ" },
+          { code: "monthly-package-4", name: "4 حلقات في الشهر", meta: "اشتراك شهري", price: "20 د.أ" },
         ],
       },
       {
@@ -175,6 +186,8 @@ const copy = {
     restockMessage: "This product is currently out of stock. Call Sonbol Salon if you want it. It usually arrives on the nearest Thursday.",
     groomBookingTitle: "Groom package booking",
     groomBookingText: "To book the groom package, please call Sonbol Salon directly so the details and timing can be arranged.",
+    monthlyBookingTitle: "Monthly packages",
+    monthlyBookingText: "To subscribe or ask about monthly packages, please call Sonbol Salon directly.",
     callSalon: "Call Sonbol Salon",
     close: "Close",
     finalTitle: "Ready to set your time?",
@@ -187,23 +200,31 @@ const copy = {
     serviceGroups: [
       {
         title: "Hair and Beard",
-        count: "5 services",
+        count: "6 services",
         items: [
           { code: "hair-beard-blowdry-scrub-mask", name: "Hair + Beard + Blow Dry + Scrub or Mask", meta: "40 min", price: "7 JOD" },
           { code: "haircut", name: "Haircut", meta: "30 min", price: "4 JOD" },
           { code: "beard", name: "Beard Trim", meta: "20 min", price: "3 JOD" },
+          { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
           { code: "home-haircut", name: "Home Haircut", meta: "1h 30m", price: "20 JOD" },
           { code: "kids", name: "Kids Haircut", meta: "20 min", price: "3 JOD" },
         ],
       },
       {
         title: "Care and Styling",
-        count: "4 services",
+        count: "3 services",
         items: [
-          { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
           { code: "steam-oil-bath", name: "Steam Oil Bath", meta: "30 min", price: "10 JOD" },
           { code: "protein", name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
           { code: "skin-cleaning", name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
+        ],
+      },
+      {
+        title: "Monthly Packages",
+        count: "2 packages",
+        items: [
+          { code: "monthly-package-3", name: "3 haircuts per month", meta: "Monthly package", price: "18 JOD" },
+          { code: "monthly-package-4", name: "4 haircuts per month", meta: "Monthly package", price: "20 JOD" },
         ],
       },
       {
@@ -229,7 +250,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [groomContactOpen, setGroomContactOpen] = useState(false);
+  const [contactService, setContactService] = useState<ServiceItem | null>(null);
   const t = copy[lang];
   const isArabic = lang === "ar";
 
@@ -389,7 +410,7 @@ export default function Home() {
             <p className="mt-4 text-base font-bold leading-8 text-slate-400">{t.servicesSubtitle}</p>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-3">
+          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
             {t.serviceGroups.map((group, groupIndex) => (
               <article
                 className="animate-[rise_650ms_ease_both] rounded-lg border border-white/[0.18] bg-white/[0.045] p-4 shadow-[0_18px_58px_rgba(0,0,0,0.22)] backdrop-blur"
@@ -414,13 +435,13 @@ export default function Home() {
                       </>
                     );
 
-                    if (service.code === "groom-package") {
+                    if (CALL_ONLY_SERVICE_CODES.has(service.code)) {
                       return (
                         <button
                           className="block w-full rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 text-start transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
                           key={service.name}
                           type="button"
-                          onClick={() => setGroomContactOpen(true)}
+                          onClick={() => setContactService(service)}
                         >
                           {cardContent}
                         </button>
@@ -678,19 +699,23 @@ export default function Home() {
         </div>
       ) : null}
 
-      {groomContactOpen ? (
+      {contactService ? (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/70 p-3 backdrop-blur-sm sm:place-items-center">
           <div className="w-full max-w-md animate-[rise_240ms_ease_both] rounded-lg border border-white/[0.18] bg-[#081426] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-            <p className="text-sm font-black text-[#c8ad72]">{isArabic ? "بكج العريس" : "Groom Package"}</p>
-            <h2 className="mt-3 text-2xl font-black">{t.groomBookingTitle}</h2>
-            <p className="mt-4 text-sm font-bold leading-7 text-slate-300">{t.groomBookingText}</p>
+            <p className="text-sm font-black text-[#c8ad72]">{contactService.name}</p>
+            <h2 className="mt-3 text-2xl font-black">
+              {contactService.code === "groom-package" ? t.groomBookingTitle : t.monthlyBookingTitle}
+            </h2>
+            <p className="mt-4 text-sm font-bold leading-7 text-slate-300">
+              {contactService.code === "groom-package" ? t.groomBookingText : t.monthlyBookingText}
+            </p>
             <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE}`}>
               {t.callSalon}: {SHOP_PHONE}
             </a>
             <button
               type="button"
               className="mt-5 flex w-full items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-black text-[#071426]"
-              onClick={() => setGroomContactOpen(false)}
+              onClick={() => setContactService(null)}
             >
               {t.close}
             </button>
