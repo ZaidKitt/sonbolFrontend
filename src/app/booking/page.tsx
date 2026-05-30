@@ -421,7 +421,15 @@ export default function BookingPage() {
 
         const groomServices = servicesData.filter((service) => isGroomPackage(service));
         const bookableServices = servicesData.filter((service) => !isGroomPackage(service));
-        const allServices = [...bookableServices, ...CALL_ONLY_SERVICES, ...groomServices];
+        const careStartIndex = bookableServices.findIndex((service) => service.code === "steam-oil-bath");
+        const allServices = careStartIndex === -1
+          ? [...bookableServices, ...CALL_ONLY_SERVICES, ...groomServices]
+          : [
+              ...bookableServices.slice(0, careStartIndex),
+              ...CALL_ONLY_SERVICES,
+              ...bookableServices.slice(careStartIndex),
+              ...groomServices,
+            ];
         const requestedService = new URLSearchParams(window.location.search).get("service");
         const matchedService = requestedService
           ? allServices.find((service) => service.code === requestedService || String(service.id) === requestedService)

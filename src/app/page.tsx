@@ -111,20 +111,20 @@ const copy = {
         ],
       },
       {
+        title: "البكجات الشهرية",
+        count: "بكجان",
+        items: [
+          { code: "monthly-package-3", name: "3 حلقات في الشهر", meta: "اشتراك شهري", price: "18 د.أ" },
+          { code: "monthly-package-4", name: "4 حلقات في الشهر", meta: "اشتراك شهري", price: "20 د.أ" },
+        ],
+      },
+      {
         title: "العناية والتجهيز",
         count: "3 خدمات",
         items: [
           { code: "steam-oil-bath", name: "حمام زيت على البخار", meta: "30 دقيقة", price: "10 د.أ" },
           { code: "protein", name: "بروتين", meta: "ساعة و30 دقيقة", price: "من 20 د.أ" },
           { code: "skin-cleaning", name: "تنظيف بشرة", meta: "ساعة و30 دقيقة", price: "15 د.أ" },
-        ],
-      },
-      {
-        title: "البكجات الشهرية",
-        count: "بكجان",
-        items: [
-          { code: "monthly-package-3", name: "3 حلقات في الشهر", meta: "اشتراك شهري", price: "18 د.أ" },
-          { code: "monthly-package-4", name: "4 حلقات في الشهر", meta: "اشتراك شهري", price: "20 د.أ" },
         ],
       },
       {
@@ -211,20 +211,20 @@ const copy = {
         ],
       },
       {
+        title: "Monthly Packages",
+        count: "2 packages",
+        items: [
+          { code: "monthly-package-3", name: "3 haircuts per month", meta: "Monthly package", price: "18 JOD" },
+          { code: "monthly-package-4", name: "4 haircuts per month", meta: "Monthly package", price: "20 JOD" },
+        ],
+      },
+      {
         title: "Care and Styling",
         count: "3 services",
         items: [
           { code: "steam-oil-bath", name: "Steam Oil Bath", meta: "30 min", price: "10 JOD" },
           { code: "protein", name: "Protein", meta: "1h 30m", price: "from 20 JOD" },
           { code: "skin-cleaning", name: "Facial Cleaning", meta: "1h 30m", price: "15 JOD" },
-        ],
-      },
-      {
-        title: "Monthly Packages",
-        count: "2 packages",
-        items: [
-          { code: "monthly-package-3", name: "3 haircuts per month", meta: "Monthly package", price: "18 JOD" },
-          { code: "monthly-package-4", name: "4 haircuts per month", meta: "Monthly package", price: "20 JOD" },
         ],
       },
       {
