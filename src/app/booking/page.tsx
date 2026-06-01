@@ -421,13 +421,13 @@ export default function BookingPage() {
 
         const groomServices = servicesData.filter((service) => isGroomPackage(service));
         const bookableServices = servicesData.filter((service) => !isGroomPackage(service));
-        const hairBeardIndex = bookableServices.findIndex((service) => service.code === "hair-beard-blowdry-scrub-mask");
-        const allServices = hairBeardIndex === -1
+        const kidsIndex = bookableServices.findIndex((service) => service.code === "kids");
+        const allServices = kidsIndex === -1
           ? [...bookableServices, ...CALL_ONLY_SERVICES, ...groomServices]
           : [
-              ...bookableServices.slice(0, hairBeardIndex + 1),
+              ...bookableServices.slice(0, kidsIndex + 1),
               ...CALL_ONLY_SERVICES,
-              ...bookableServices.slice(hairBeardIndex + 1),
+              ...bookableServices.slice(kidsIndex + 1),
               ...groomServices,
             ];
         const requestedService = new URLSearchParams(window.location.search).get("service");
