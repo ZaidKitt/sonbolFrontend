@@ -261,6 +261,7 @@ export default function Home() {
       items: SHOW_MONTHLY_PACKAGES ? group.items : group.items.filter((service) => !MONTHLY_PACKAGE_CODES.has(service.code)),
     }))
     .filter((group) => group.items.length > 0);
+  const servicesGridClass = visibleServiceGroups.length === 3 ? "xl:grid-cols-3" : "xl:grid-cols-4";
 
   useEffect(() => {
     let active = true;
@@ -418,10 +419,10 @@ export default function Home() {
             <p className="mt-4 text-base font-bold leading-8 text-slate-400">{t.servicesSubtitle}</p>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div className={`grid items-start gap-4 lg:grid-cols-2 ${servicesGridClass}`}>
             {visibleServiceGroups.map((group, groupIndex) => (
               <article
-                className="animate-[rise_650ms_ease_both] rounded-lg border border-white/[0.18] bg-white/[0.045] p-4 shadow-[0_18px_58px_rgba(0,0,0,0.22)] backdrop-blur"
+                className="self-start animate-[rise_650ms_ease_both] rounded-lg border border-white/[0.18] bg-white/[0.045] p-4 shadow-[0_18px_58px_rgba(0,0,0,0.22)] backdrop-blur"
                 style={{ animationDelay: `${groupIndex * 90}ms` }}
                 key={group.title}
               >
