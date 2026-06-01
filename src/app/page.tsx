@@ -28,6 +28,8 @@ type ServiceGroup = {
   items: ServiceItem[];
 };
 
+const SHOW_MONTHLY_PACKAGES = false;
+const MONTHLY_PACKAGE_CODES = new Set(["monthly-package-3", "monthly-package-4"]);
 const CALL_ONLY_SERVICE_CODES = new Set(["groom-package", "monthly-package-3", "monthly-package-4"]);
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
@@ -253,6 +255,12 @@ export default function Home() {
   const [contactService, setContactService] = useState<ServiceItem | null>(null);
   const t = copy[lang];
   const isArabic = lang === "ar";
+  const visibleServiceGroups: ServiceGroup[] = t.serviceGroups
+    .map((group) => ({
+      ...group,
+      items: SHOW_MONTHLY_PACKAGES ? group.items : group.items.filter((service) => !MONTHLY_PACKAGE_CODES.has(service.code)),
+    }))
+    .filter((group) => group.items.length > 0);
 
   useEffect(() => {
     let active = true;
@@ -411,7 +419,7 @@ export default function Home() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-            {t.serviceGroups.map((group, groupIndex) => (
+            {visibleServiceGroups.map((group, groupIndex) => (
               <article
                 className="animate-[rise_650ms_ease_both] rounded-lg border border-white/[0.18] bg-white/[0.045] p-4 shadow-[0_18px_58px_rgba(0,0,0,0.22)] backdrop-blur"
                 style={{ animationDelay: `${groupIndex * 90}ms` }}

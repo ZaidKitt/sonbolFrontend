@@ -52,6 +52,7 @@ type FormState = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
+const SHOW_MONTHLY_PACKAGES = false;
 const CALL_ONLY_SERVICES: Service[] = [
   {
     id: -101,
@@ -421,12 +422,13 @@ export default function BookingPage() {
 
         const groomServices = servicesData.filter((service) => isGroomPackage(service));
         const bookableServices = servicesData.filter((service) => !isGroomPackage(service));
+        const visibleCallOnlyServices = SHOW_MONTHLY_PACKAGES ? CALL_ONLY_SERVICES : [];
         const kidsIndex = bookableServices.findIndex((service) => service.code === "kids");
         const allServices = kidsIndex === -1
-          ? [...bookableServices, ...CALL_ONLY_SERVICES, ...groomServices]
+          ? [...bookableServices, ...visibleCallOnlyServices, ...groomServices]
           : [
               ...bookableServices.slice(0, kidsIndex + 1),
-              ...CALL_ONLY_SERVICES,
+              ...visibleCallOnlyServices,
               ...bookableServices.slice(kidsIndex + 1),
               ...groomServices,
             ];
