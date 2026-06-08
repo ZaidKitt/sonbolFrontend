@@ -104,7 +104,7 @@ const copy = {
         title: "الشعر واللحية",
         count: "6 خدمات",
         items: [
-          { code: "hair-beard-blowdry-scrub-mask", name: "شعر + لحية + سشوار + سنفرة أو ماسك", meta: "40 دقيقة", price: "7 د.أ" },
+          { code: "hair-beard-blowdry-scrub-mask", name: "شعر + لحية", meta: "40 دقيقة", price: "7 د.أ" },
           { code: "haircut", name: "قص شعر", meta: "30 دقيقة", price: "4 د.أ" },
           { code: "beard", name: "تهذيب لحية", meta: "20 دقيقة", price: "3 د.أ" },
           { code: "blowdry", name: "سشوار", meta: "10 دقائق", price: "2 د.أ" },
@@ -204,7 +204,7 @@ const copy = {
         title: "Hair and Beard",
         count: "6 services",
         items: [
-          { code: "hair-beard-blowdry-scrub-mask", name: "Hair + Beard + Blow Dry + Scrub or Mask", meta: "40 min", price: "7 JOD" },
+          { code: "hair-beard-blowdry-scrub-mask", name: "Hair + Beard", meta: "40 min", price: "7 JOD" },
           { code: "haircut", name: "Haircut", meta: "30 min", price: "4 JOD" },
           { code: "beard", name: "Beard Trim", meta: "20 min", price: "3 JOD" },
           { code: "blowdry", name: "Blow Dry", meta: "10 min", price: "2 JOD" },
