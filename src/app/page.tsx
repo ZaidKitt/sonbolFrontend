@@ -33,6 +33,7 @@ const MONTHLY_PACKAGE_CODES = new Set(["monthly-package-3", "monthly-package-4"]
 const CALL_ONLY_SERVICE_CODES = new Set(["groom-package", "monthly-package-3", "monthly-package-4"]);
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 const SHOP_PHONE = "0789299699";
+const SHOP_PHONE_INTL = "+962789299699";
 const LOCATION_URL = "https://maps.app.goo.gl/pqGYKWD1NurxMs1W7?g_st=ic";
 
 const copy = {
@@ -80,6 +81,9 @@ const copy = {
     locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
     phoneLabel: "الهاتف",
     hoursLabel: "الدوام",
+    hoursDetails:
+      "الأحد: 12 ظهراً - 10 مساءً\nالإثنين: 12 ظهراً - 10 مساءً\nالثلاثاء: عطلة\nالأربعاء: 12 ظهراً - 10 مساءً\nالخميس: 12 ظهراً - 10 مساءً\nالجمعة: 2 مساءً - 10 مساءً\nالسبت: 12 ظهراً - 10 مساءً",
+    phoneDisplay: SHOP_PHONE,
     inStock: "متوفر",
     outOfStock: "غير متوفر",
     buyTitle: "شراء المنتج",
@@ -162,10 +166,10 @@ const copy = {
     visitCards: [
       { label: "01", title: "Choose your time", text: "Services, pricing, and duration are clearly displayed before you book." },
       { label: "02", title: "Pay with CLIQ", text: "Send payment to alias: SKH46. Your appointment will be confirmed once the payment is received." },
-      { label: "03", title: "Arrive 15 minutes early", text: "After confirmation, arriving early keeps the schedule smooth." },
+      { label: "03", title: "Arrive 15 minutes early", text: "After confirmation, arriving a few minutes early helps keep the schedule running smoothly." },
     ],
     visitNoteTitle: "Need to change or cancel?",
-    visitNoteText: "Call Sonbol Salon at 0789299699. Website cancellation is not available.",
+    visitNoteText: "Call Sonbol Salon at +962789299699. Changes and cancellations are only handled by phone.",
     servicesEyebrow: "Menu",
     servicesTitle: "Precision Scheduling. Exceptional Attention to Detail.",
     servicesSubtitle: "Every service displays its price and duration upfront, with a simple booking process from start to finish.",
@@ -176,10 +180,13 @@ const copy = {
     productsEmpty: "No products are visible right now.",
     locationEyebrow: "Our location 📍",
     locationTitle: "Jordan - Balqa - Ein Al-Basha",
-    locationText: "Use the link below to reach the location on Google Maps.",
+    locationText: "Use the link below to open the location in Google Maps.",
     locationAddress: "Sonbol Men’s Barber Shop, St, Ein Al-Basha 19374",
     phoneLabel: "Phone",
     hoursLabel: "Hours",
+    hoursDetails:
+      "Sun: 12 PM - 10 PM\nMon: 12 PM - 10 PM\nTue: Closed.\nWed: 12 PM - 10 PM\nThu: 12 PM - 10 PM\nFri: 2 PM - 10 PM\nSat: 12 PM - 10 PM",
+    phoneDisplay: SHOP_PHONE_INTL,
     inStock: "In stock",
     outOfStock: "Out of stock",
     buyTitle: "Buy product",
@@ -192,8 +199,8 @@ const copy = {
     monthlyBookingText: "To subscribe or ask about monthly packages, please call Sonbol Salon directly.",
     callSalon: "Call Sonbol Salon",
     close: "Close",
-    finalTitle: "Ready to set your time?",
-    finalText: "Choose your service and time. After the CLIQ transfer arrives, the appointment is confirmed.",
+    finalTitle: "Ready to book your appointment?",
+    finalText: "Select your service and preferred time. Once the CLIQ transfer is received, your booking will be confirmed.",
     footerTagline: "Experience, skill, and precision on every visit.",
     footerQuick: "Quick links",
     footerContact: "Contact",
@@ -514,9 +521,9 @@ export default function Home() {
                 </div>
                 <a
                   className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
-                  href={`tel:${SHOP_PHONE}`}
+                  href={`tel:${SHOP_PHONE_INTL}`}
                 >
-                  {SHOP_PHONE}
+                  {t.phoneDisplay}
                 </a>
               </div>
             </div>
@@ -598,12 +605,12 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
                   <span className="block text-xs font-black text-slate-500">{t.hoursLabel}</span>
-                  <strong className="mt-2 block text-sm font-black text-white">{t.heroNote}</strong>
+                  <strong className="mt-2 block whitespace-pre-line text-sm font-black leading-7 text-white">{t.hoursDetails}</strong>
                 </div>
                 <div className="rounded-lg border border-white/[0.12] bg-[#0b1628]/85 p-4">
                   <span className="block text-xs font-black text-slate-500">{t.phoneLabel}</span>
-                  <a className="mt-2 block text-sm font-black text-white" href={`tel:${SHOP_PHONE}`}>
-                    {SHOP_PHONE}
+                  <a className="mt-2 block text-sm font-black text-white" href={`tel:${SHOP_PHONE_INTL}`}>
+                    {t.phoneDisplay}
                   </a>
                 </div>
               </div>
@@ -666,7 +673,7 @@ export default function Home() {
           <div>
             <h3 className="text-sm font-black text-[#c8ad72]">{t.footerContact}</h3>
             <div className="mt-4 grid gap-3 text-sm font-bold leading-7 text-slate-300">
-              <a className="transition hover:text-white" href={`tel:${SHOP_PHONE}`}>{SHOP_PHONE}</a>
+              <a className="transition hover:text-white" href={`tel:${SHOP_PHONE_INTL}`}>{t.phoneDisplay}</a>
               <a className="transition hover:text-white" href={LOCATION_URL} target="_blank" rel="noreferrer">
                 {t.locationAddress}
               </a>
@@ -693,8 +700,8 @@ export default function Home() {
             <p className="text-sm font-black text-[#c8ad72]">{selectedProduct.is_in_stock ? t.buyTitle : t.restockTitle}</p>
             <h2 className="mt-3 text-2xl font-black">{isArabic ? selectedProduct.title_ar : selectedProduct.title_en || selectedProduct.title_ar}</h2>
             <p className="mt-4 text-sm font-bold leading-7 text-slate-300">{selectedProduct.is_in_stock ? t.buyMessage : t.restockMessage}</p>
-            <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE}`}>
-              {SHOP_PHONE}
+            <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE_INTL}`}>
+              {t.phoneDisplay}
             </a>
             <button
               type="button"
@@ -717,8 +724,8 @@ export default function Home() {
             <p className="mt-4 text-sm font-bold leading-7 text-slate-300">
               {contactService.code === "groom-package" ? t.groomBookingText : t.monthlyBookingText}
             </p>
-            <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE}`}>
-              {t.callSalon}: {SHOP_PHONE}
+            <a className="mt-4 inline-flex rounded-lg border border-white/[0.18] bg-white/[0.08] px-4 py-3 font-black text-white" href={`tel:${SHOP_PHONE_INTL}`}>
+              {t.callSalon}: {t.phoneDisplay}
             </a>
             <button
               type="button"
