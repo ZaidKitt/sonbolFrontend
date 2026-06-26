@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-type Language = "ar" | "en";
+import { useEffect, useRef, useState } from "react";
+import { bookingPath, getPreferredLanguage, storeLanguage, type Language } from "@/lib/language";
 
 type Product = {
   id: number;
@@ -256,18 +255,34 @@ function formatProductPrice(value: string, lang: Language) {
 
 export default function Home() {
   const [lang, setLang] = useState<Language>("ar");
+  const skipInitialLanguageStore = useRef(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [contactService, setContactService] = useState<ServiceItem | null>(null);
   const t = copy[lang];
   const isArabic = lang === "ar";
+  const bookHref = bookingPath(lang);
   const visibleServiceGroups: ServiceGroup[] = t.serviceGroups
     .map((group) => ({
       ...group,
       items: SHOW_MONTHLY_PACKAGES ? group.items : group.items.filter((service) => !MONTHLY_PACKAGE_CODES.has(service.code)),
     }))
     .filter((group) => group.items.length > 0);
+
+  useEffect(() => {
+    const preferredLanguage = getPreferredLanguage();
+    setLang(preferredLanguage);
+    storeLanguage(preferredLanguage);
+  }, []);
+
+  useEffect(() => {
+    if (skipInitialLanguageStore.current) {
+      skipInitialLanguageStore.current = false;
+      return;
+    }
+    storeLanguage(lang);
+  }, [lang]);
 
   useEffect(() => {
     let active = true;
@@ -339,7 +354,7 @@ export default function Home() {
               {t.lang}
             </button>
             <Link
-              href="/booking"
+              href={bookHref}
               className="rounded-full bg-white px-4 py-2 text-xs font-black text-[#071426] shadow-[0_16px_36px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#f4efe5] sm:px-5 sm:py-2.5 sm:text-sm"
             >
               {t.book}
@@ -364,7 +379,7 @@ export default function Home() {
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/booking"
+                href={bookHref}
                 className="inline-flex min-h-12 items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
               >
                 {t.book}
@@ -466,7 +481,7 @@ export default function Home() {
                     return (
                       <Link
                         className="block rounded-lg border border-white/[0.12] bg-[#0b1628]/80 p-4 transition hover:-translate-y-0.5 hover:border-[#c8ad72]/55 hover:bg-[#101d31]"
-                        href={`/booking?service=${encodeURIComponent(service.code)}`}
+                        href={bookingPath(lang, service.code)}
                         key={service.name}
                       >
                         {cardContent}
@@ -636,7 +651,7 @@ export default function Home() {
             <p className="mt-4 max-w-2xl text-base font-bold leading-8 text-slate-400">{t.finalText}</p>
           </div>
           <Link
-            href="/booking"
+            href={bookHref}
             className="inline-flex min-h-12 items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-black text-[#071426] transition hover:-translate-y-0.5 hover:bg-[#f4efe5]"
           >
             {t.book}
@@ -666,7 +681,7 @@ export default function Home() {
               <a className="transition hover:text-white" href="#services">{t.navServices}</a>
               <a className="transition hover:text-white" href="#products">{t.navProducts}</a>
               <a className="transition hover:text-white" href="#location">{t.navLocation}</a>
-              <Link className="transition hover:text-white" href="/booking">{t.book}</Link>
+              <Link className="transition hover:text-white" href={bookHref}>{t.book}</Link>
             </div>
           </div>
 

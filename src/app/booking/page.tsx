@@ -3,8 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-type Language = "ar" | "en";
+import { getPreferredLanguage, storeLanguage, type Language } from "@/lib/language";
 
 type Service = {
   id: number;
@@ -365,6 +364,7 @@ export default function BookingPage() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const navigationRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollToStep = useRef(false);
+  const skipInitialLanguageStore = useRef(true);
 
   const t = copy[lang];
   const isArabic = lang === "ar";
@@ -373,6 +373,20 @@ export default function BookingPage() {
   const selectedBarber = barbers.find((barber) => barber.id === selectedBarberId) ?? null;
   const bookingAmount = formatBookingAmount(selectedService, wantsDisposableTowel, lang);
   const steps = [t.service, t.barber, t.day, t.time, t.details];
+
+  useEffect(() => {
+    const preferredLanguage = getPreferredLanguage();
+    setLang(preferredLanguage);
+    storeLanguage(preferredLanguage);
+  }, []);
+
+  useEffect(() => {
+    if (skipInitialLanguageStore.current) {
+      skipInitialLanguageStore.current = false;
+      return;
+    }
+    storeLanguage(lang);
+  }, [lang]);
 
   function scrollToBookingForm() {
     window.requestAnimationFrame(() => {
