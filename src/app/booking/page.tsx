@@ -194,15 +194,21 @@ const copy = {
 
 function formatDuration(minutes: number, lang: Language) {
   if (minutes === 90) {
-    return lang === "ar" ? "ساعة و30 دقيقة" : "1h 30m";
+    return lang === "ar" ? "ساعة و30 دقيقة" : "1 hr 30 min";
   }
 
   if (minutes >= 60) {
-    const hours = minutes / 60;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
     if (lang === "ar") {
+      if (remainingMinutes > 0) {
+        return `${hours === 1 ? "ساعة" : `${hours} ساعات`} و${remainingMinutes} دقيقة`;
+      }
       return hours === 1 ? "ساعة" : `${hours} ساعات`;
     }
-    return `${hours}h`;
+
+    const hourLabel = hours === 1 ? "hr" : "hours";
+    return remainingMinutes > 0 ? `${hours} ${hourLabel} ${remainingMinutes} min` : `${hours} ${hourLabel}`;
   }
 
   return lang === "ar" ? `${minutes} ${minutes === 10 ? "دقائق" : "دقيقة"}` : `${minutes} min`;
